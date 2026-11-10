@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <!-- K4: v13+ ticari lisans - [12.5.0,13) araligi bilinçli, gevşetilmez. -->
+    <PackageReference Include="MediatR" Version="[12.5.0,13.0.0)" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
+    <!-- Cron ayrıştırma (İçe alım zamanlaması) — MIT, geçişli bağımlılık yok, DST-doğru. -->
+    <PackageReference Include="Cronos" Version="0.13.0" />
+    <PackageReference Include="YamlDotNet" Version="18.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kds.Common\Kds.Common.csproj" />
+    <ProjectReference Include="..\Kds.Contracts\Kds.Contracts.csproj" />
+    <ProjectReference Include="..\Kds.Data\Kds.Data.csproj" />
+    <ProjectReference Include="..\Kds.Execution\Kds.Execution.csproj" />
+    <!-- Rapor aboneliği (S15): gönderim sonucunu CSV/Excel/PDF'e çevirir (saf biçimlendirici;
+         durumsuz, veri erişimi yok → iki-dünya ADR ihlali değil). -->
+    <ProjectReference Include="..\Kds.Export\Kds.Export.csproj" />
+  </ItemGroup>
+
+</Project>

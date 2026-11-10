@@ -1,0 +1,19 @@
+bin/
+obj/
+.vs/
+*.user
+node_modules/
+dist/
+publish/
+# Vite kuralı: .env.development repoya girer (sır içermez);
+# makineye özel sırlar .env.local / .env.*.local dosyalarında tutulur
+.env.local
+.env.*.local
+# Keycloak binary'si (indir scriptiyle gelir) — realm/scriptler repo'da kalır
+infra/keycloak/
+
+# Yuk testi uretilen raporlari
+yuk-raporlari/
+
+# Yayin ortam parolalari (sablon .env.example git'te)
+infra/deploy/.env

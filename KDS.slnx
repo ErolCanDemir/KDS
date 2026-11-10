@@ -1,0 +1,17 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Kds.Common/Kds.Common.csproj" />
+    <Project Path="src/Kds.Contracts/Kds.Contracts.csproj" />
+    <Project Path="src/Kds.Business/Kds.Business.csproj" />
+    <Project Path="src/Kds.Data/Kds.Data.csproj" />
+    <Project Path="src/Kds.Execution/Kds.Execution.csproj" />
+    <Project Path="src/Kds.Ajan/Kds.Ajan.csproj" />
+    <Project Path="src/Kds.Api/Kds.Api.csproj" />
+    <Project Path="src/Kds.Logging/Kds.Logging.csproj" />
+    <Project Path="src/Kds.Export/Kds.Export.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Kds.LoadTests/Kds.LoadTests.csproj" />
+    <Project Path="tests/Kds.Tests/Kds.Tests.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <PackageReference Include="MailKit" Version="4.17.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.10" />
+    <!-- Geçişli Microsoft.OpenApi 2.0.0'da bilinen açık (GHSA-v5pm-xwqc-g5wc) - yamalı sürüme sabitlendi -->
+    <PackageReference Include="Microsoft.OpenApi" Version="2.11.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kds.Business\Kds.Business.csproj" />
+    <ProjectReference Include="..\Kds.Logging\Kds.Logging.csproj" />
+    <ProjectReference Include="..\Kds.Export\Kds.Export.csproj" />
+  </ItemGroup>
+
+</Project>

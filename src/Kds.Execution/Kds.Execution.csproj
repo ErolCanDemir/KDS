@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Çalıştırma dünyası (00-analiz §6): saf ADO.NET; Kds.Dal'a referans YASAK
+       (iki dünya ayrımı derlemede korunur). S4: bağlantı denetimi (SqlClient).
+       S5: sorgu çalıştırma + ScriptDom SELECT-only bekçisi. -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.2" />
+    <!-- SELECT-only bekçisi: resmî T-SQL parser (AST doğrulaması), MIT -->
+    <PackageReference Include="Microsoft.SqlServer.TransactSql.ScriptDom" Version="161.9142.1" />
+  </ItemGroup>
+
+  <!-- Sorgu modeli + harita şeması sözleşmeleri (S7 SQL üretici). Contracts saf DTO'dur
+       (EF/DbContext YOK) — iki-dünya kuralı yalnız Kds.Dal referansını yasaklar, Contracts serbest. -->
+  <ItemGroup>
+    <ProjectReference Include="..\Kds.Contracts\Kds.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

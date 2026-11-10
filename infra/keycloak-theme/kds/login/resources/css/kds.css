@@ -1,0 +1,420 @@
+/* LST-KDS login temasi — markali gradyan zemin + ortali beyaz KART ("kutu").
+   Genis ekran: sol marka paneli + sagda kart. Dar ekran: yalniz kart, gradyan uzerinde.
+   Klasik keycloak temasinin uzerine yuklenir (kds.css en son gelir). */
+
+:root {
+  --navy: #0f2d4e;
+  --navy-2: #0e5c74;
+  --teal: #0e6f7a;
+  --teal-br: #16aebd;
+  --alan-bord: #cdd6de;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+/* --- Zemin: HER ZAMAN markali gradyan (asla duz beyaz) --- */
+html.login-pf { height: 100%; scrollbar-gutter: stable; }
+html.login-pf,
+.login-pf body,
+body.login-pf-page {
+  background-color: #e9edf1 !important;
+  background-image: linear-gradient(160deg, #eef1f5 0%, #e2e7ee 100%) !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
+  min-height: 100%;
+}
+.login-pf body {
+  margin: 0;
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+/* --- Split kabuk: sol marka + sag kart; ikisi de gradyan zemin uzerinde ---
+   Oran 40/60 (kullanici karari, 21 Agu 2026 mockup turu; onceki 25/75). */
+.kds-split {
+  display: grid;
+  grid-template-columns: 40% 60%;
+  min-height: 100vh;
+}
+
+/* --- Sol marka paneli (seffaf; zemin gradyani gorunur) --- */
+.kds-brand {
+  position: relative;
+  overflow: hidden;
+  container-type: inline-size;
+  background: linear-gradient(160deg, #0f2d4e 0%, #0e5c74 55%, #0e6f7a 100%);
+  color: #fff;
+  padding: 6vh 7cqw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 28px;
+}
+.kds-brand::after {
+  content: "";
+  position: absolute;
+  right: -6vw; top: -6vw;
+  width: 24vw; height: 24vw;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(22, 174, 189, .35), transparent 70%);
+  pointer-events: none;
+}
+.kds-wm {
+  font-weight: 800; letter-spacing: 1px;
+  font-size: clamp(28px, 16cqw, 52px);
+  line-height: 1; white-space: nowrap;
+}
+.kds-tag {
+  color: rgba(255, 255, 255, .82);
+  letter-spacing: 2.5px; text-transform: uppercase;
+  font-size: clamp(11px, 4cqw, 15px);
+  margin-top: 12px;
+}
+/* ================= S26: NOBETCI BOT MASKOTLARI (mockup varyant 3) =================
+   Davranis maskot.js'te; burada gorunum + animasyonlar. Sinif adlari kds- onekli
+   (patternfly ile cakismasin). Durum siniflari BODY'ye yazilir: kds-kacir / kds-yaziyor. */
+.kds-takim {
+  position: relative; z-index: 2;
+  display: flex; align-items: flex-end; justify-content: center;
+  gap: 16px; height: 118px;
+}
+.kds-maskot { position: relative; transform-origin: 50% 100%; }
+.kds-dusen { animation: kds-dus .8s cubic-bezier(.22,1.4,.36,1) both; }
+@keyframes kds-dus {
+  0%   { transform: translateY(-420px) rotate(-8deg); opacity: 0; }
+  55%  { opacity: 1; }
+  70%  { transform: translateY(10px) rotate(2deg); }
+  85%  { transform: translateY(-5px); }
+  100% { transform: translateY(0) rotate(0); }
+}
+/* idle canlilik: uye basina farkli tempo (JS --kst/--ksd verir) */
+.kds-salinim {
+  transform-origin: 50% 100%;
+  animation: kds-salin var(--kst, 3.4s) ease-in-out var(--ksd, 0s) infinite;
+}
+@keyframes kds-salin {
+  0%, 100% { transform: translateY(0) rotate(-1.4deg); }
+  50%      { transform: translateY(-4px) rotate(1.6deg); }
+}
+.kds-govde {
+  position: relative;
+  border-radius: 15px 15px 11px 11px;
+  box-shadow: 0 10px 22px rgba(4,16,28,.35), inset 0 -5px 0 rgba(0,0,0,.16);
+  transition: transform .4s cubic-bezier(.4,1.4,.5,1);
+}
+.kds-m1 .kds-govde, .kds-m3 .kds-govde { width: 52px; height: 58px; background: linear-gradient(165deg,#dbe9f2,#9db8c9); }
+.kds-m2 .kds-govde { width: 60px; height: 68px; background: linear-gradient(165deg,#17b8c9,#0e6f7a); }
+.kds-m4 .kds-govde { width: 43px; height: 48px; background: linear-gradient(165deg,#f6c667,#eb9f2e); }
+.kds-anten {
+  position: absolute; left: 50%; top: -13px; transform: translateX(-50%);
+  width: 3px; height: 11px; background: rgba(255,255,255,.65); border-radius: 2px;
+}
+.kds-anten::after {
+  content: ""; position: absolute; left: 50%; top: -7px; transform: translateX(-50%);
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #5edee0; box-shadow: 0 0 8px #5edee0;
+  animation: kds-nabiz 2.6s ease-in-out infinite;
+}
+@keyframes kds-nabiz { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
+.kds-yuz {
+  position: absolute; inset: auto 14% 28% 14%; height: 36%;
+  background: rgba(10,30,44,.28); border-radius: 9px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.kds-m4 .kds-yuz { inset: auto 12% 25% 12%; }
+.kds-goz {
+  width: 12px; height: 12px; background: #aef4f8; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center; overflow: hidden;
+  animation: kds-kirp 4.6s ease-in-out var(--kkd, 0s) infinite;   /* goz kirpma */
+}
+@keyframes kds-kirp { 0%, 93%, 100% { transform: scaleY(1); } 95.5%, 97% { transform: scaleY(.08); } }
+.kds-bebek { width: 45%; height: 45%; background: #06333e; border-radius: 50%; transition: transform .14s; }
+
+/* SIFRE MODU — gozlerini OBUR TARAFA kacirirlar (yuz gorunur; arkalarini donmezler) */
+body.kds-kacir .kds-govde { transform: rotate(-9deg) translateX(-4px); }
+body.kds-kacir .kds-bebek { transform: translate(-4.2px,-1.6px) !important; }
+body.kds-kacir .kds-goz { animation: none; }
+body.kds-kacir .kds-anten::after { animation: kds-sinyal .9s ease-in-out infinite; }  /* gizli mod */
+@keyframes kds-sinyal { 0%, 100% { opacity: 1; } 50% { opacity: .15; } }
+body.kds-kacir.kds-yaziyor .kds-salinim { animation: kds-kipir 1.05s ease-in-out infinite; }
+@keyframes kds-kipir {
+  0%, 100% { transform: rotate(-1.6deg); }
+  30%      { transform: rotate(2.4deg); }
+  70%      { transform: rotate(-2.6deg); }
+}
+/* en kucuk uye arada gizlice sifreye bakar, hemen kacirir */
+body.kds-kacir .kds-maskot:last-child .kds-bebek { animation: kds-casus 3s ease-in-out infinite; }
+@keyframes kds-casus {
+  0%, 52%, 100% { transform: translate(-4.2px,-1.6px); }
+  62%, 80%      { transform: translate(4.4px,1.2px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kds-dusen, .kds-salinim, .kds-goz, .kds-anten::after,
+  body.kds-kacir .kds-maskot:last-child .kds-bebek { animation: none !important; }
+}
+.kds-bul {
+  list-style: none; padding: 0; margin: 0; text-align: left;
+  display: flex; flex-direction: column; gap: 15px;
+}
+.kds-bul li {
+  display: flex; align-items: center; gap: 12px;
+  font-size: clamp(12px, 4.8cqw, 15px); line-height: 1.35;
+  color: rgba(255, 255, 255, .92);
+}
+.kds-bul li span {
+  width: 11px; height: 11px; border-radius: 3px;
+  background: var(--teal-br); flex: 0 0 auto;
+}
+
+/* --- Slogan + taahhut uclusu (21 Agu 2026 mockup dili) --- */
+.kds-slogan {
+  font-weight: 800; line-height: 1.18; letter-spacing: -1px;
+  font-size: clamp(22px, 8cqw, 34px);
+  max-width: 13ch;
+}
+.kds-aciklama {
+  color: rgba(255, 255, 255, .84);
+  font-size: clamp(12px, 4.4cqw, 13.5px); line-height: 1.55;
+  max-width: 40ch; margin: 0;
+}
+.kds-taahhut {
+  display: flex; gap: clamp(16px, 7cqw, 30px);
+  justify-content: center; flex-wrap: wrap;
+}
+.kds-taahhut div b {
+  display: block; font-weight: 700;
+  font-size: clamp(17px, 6.4cqw, 22px); line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+.kds-taahhut div span {
+  font-size: clamp(10.5px, 3.8cqw, 12px);
+  color: rgba(255, 255, 255, .75);
+}
+
+/* --- Sag panel: karti dikey+yatay ortala --- */
+.kds-main {
+  display: flex; align-items: center; justify-content: center;
+  padding: 6vh 5vw; background: transparent;
+}
+
+/* --- Form KUTUSU (beyaz kart) --- */
+.kds-main .card-pf {
+  background: #fff;
+  border: 1px solid rgba(15, 45, 78, .07);
+  border-radius: 18px;
+  box-shadow: 0 16px 44px rgba(24, 40, 68, .16);
+  padding: 42px 40px 38px;
+  max-width: 410px; width: 100%; margin: 0;
+}
+
+/* Kart ici mini wordmark — yalniz marka paneli gizliyken (dar ekran) gorunur */
+.kds-card-brand {
+  display: none;
+  font-weight: 800; letter-spacing: .5px; font-size: 22px;
+  color: var(--navy); white-space: nowrap; margin-bottom: 20px;
+}
+
+/* Baslik */
+#kc-page-title {
+  color: var(--navy); font-weight: 700; font-size: 24px;
+  text-align: left; margin: 0 0 24px;
+}
+
+/* Etiketler */
+.pf-c-form__label-text, label {
+  color: #5a6672; font-weight: 600; font-size: 13px;
+}
+.pf-c-form__group, #kc-form-login .form-group { margin-bottom: 17px; }
+
+/* --- Metin kutulari: ortak gorunum, imlec DIKEY ORTALI --- */
+input.pf-c-form-control {
+  width: 100%;
+  height: 46px !important;
+  padding: 0 14px !important;
+  line-height: normal !important;
+  border-radius: 10px !important;
+  border: 1px solid var(--alan-bord) !important;
+  /* M9: KISALTMA (background: #fff) background-repeat'i 'repeat'e sifirliyordu — hatali giriste
+     PatternFly'in unlem ikonu tum input'a doseniyordu (LoginHata.png). Yalniz rengi ez. */
+  background-color: #fff;
+  color: #1c2b3a;
+  font-size: 14.5px;
+  transition: border-color .15s, box-shadow .15s;
+}
+/* M9 emniyeti: hata ikonunu her durumda TEK ve sagda tut. */
+input.pf-c-form-control[aria-invalid="true"] {
+  background-repeat: no-repeat !important;
+  background-position: right 12px center !important;
+  background-size: 16px 16px !important;
+}
+input.pf-c-form-control:focus {
+  outline: 0 !important;
+  border-color: var(--teal) !important;
+  box-shadow: 0 0 0 3px rgba(14, 111, 122, .16) !important;   /* golge -> tasma/kayma yok */
+}
+input.pf-c-form-control::placeholder { color: #9aa4b0; }
+
+/* Tarayicinin yerlesik sifre-goster ikonunu gizle (cift ikon olmasin) */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear { display: none; }
+
+/* --- Sifre alani: TEK kesintisiz kutu; goz sadece KUCUK bir simge (buton/cizgi yok).
+   Goz ikonu input'un ICINE (ustune) bindirilir; ayri hucre/cerceve/ayirici olmaz. --- */
+.pf-c-input-group {
+  display: block;
+  position: relative;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  height: auto;
+}
+.pf-c-input-group:focus-within { border: 0 !important; box-shadow: none !important; }
+.pf-c-input-group > input.pf-c-form-control {
+  width: 100%;
+  height: 46px !important;
+  border: 1px solid var(--alan-bord) !important;
+  border-radius: 10px !important;
+  padding: 0 42px 0 14px !important;   /* sagda simgeye yer */
+  box-shadow: none !important;
+}
+.pf-c-input-group > input.pf-c-form-control:focus {
+  border-color: var(--teal) !important;
+  box-shadow: 0 0 0 3px rgba(14, 111, 122, .16) !important;
+}
+/* Goz: input icinde sagda, saydam KUCUK simge — kutu/cerceve/ayirici cizgi yok */
+.pf-c-input-group .pf-c-button.pf-m-control {
+  position: absolute;
+  right: 8px; top: 50%; transform: translateY(-50%);
+  width: 26px; height: 26px;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  outline: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #9aa4b0;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+.pf-c-input-group .pf-c-button.pf-m-control:hover {
+  color: var(--teal);
+  background: transparent !important;
+}
+/* PatternFly kontrol butonu kenarligini ::before/::after pseudo ile cizer —
+   tumunu kaldir ki buton/kenar gorunumu gitsin, geriye yalniz goz simgesi kalsin. */
+.pf-c-input-group .pf-c-button.pf-m-control::before,
+.pf-c-input-group .pf-c-button.pf-m-control::after {
+  display: none !important;
+  content: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+.pf-c-input-group .pf-c-button.pf-m-control:focus,
+.pf-c-input-group .pf-c-button.pf-m-control:focus-visible,
+.pf-c-input-group .pf-c-button.pf-m-control:active {
+  outline: 0 !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+.pf-c-input-group .pf-c-button.pf-m-control i,
+.pf-c-input-group .pf-c-button.pf-m-control svg {
+  width: 15px !important; height: 15px !important; font-size: 15px !important;
+}
+
+/* --- Giris butonu: lacivert, tam genislik --- */
+input#kc-login,
+#kc-form-buttons .pf-c-button.pf-m-primary {
+  width: 100%;
+  background: var(--navy);
+  border: 0; border-radius: 10px;
+  color: #fff; font-weight: 700; letter-spacing: .4px;
+  padding: 13px; font-size: 15px; margin-top: 6px;
+  cursor: pointer;
+  transition: background .15s, transform .05s;
+}
+input#kc-login:hover,
+#kc-form-buttons .pf-c-button.pf-m-primary:hover { background: #163a5f; }
+input#kc-login:active { transform: translateY(1px); }
+
+/* Baglantilar */
+a { color: var(--teal); }
+a:hover { color: #0b5a63; }
+
+/* Beni hatirla */
+#kc-form-options { margin: 6px 0; }
+#kc-form-options label { font-weight: 500; color: #5a6672; }
+
+/* Dil secici — sag ust, teal ucgen caret */
+#kc-locale { display: flex; justify-content: flex-end; margin-bottom: 2px; }
+#kc-locale-dropdown button { color: var(--teal); font-weight: 600; }
+button#kc-current-locale-link::after {
+  content: "" !important; display: inline-block; margin-left: 7px;
+  vertical-align: middle; border: 4px solid transparent;
+  border-top-color: currentColor; border-bottom: 0;
+}
+#kc-locale ul { border-radius: 8px; box-shadow: 0 8px 24px rgba(0, 0, 0, .15); }
+
+/* --- Dar ekran: marka panelini gizle; kart gradyan uzerinde ortali + wordmark cikar --- */
+@media (max-width: 900px) {
+  .kds-split { grid-template-columns: 1fr; }
+  .kds-brand { display: none; }
+  .kds-main { padding: 7vh 6vw; }
+  .kds-card-brand { display: block; }
+}
+
+/* ================= S28: KADI LOGIN NOBETI =================
+   Sag altta bekler; kadi.js kurar. Login akisina/botlara dokunmaz. Sabit ACIK palet
+   (login sag bolge aciktir); uygulama icindeki tema ciftini frontend tasir. */
+.kadi-login {
+  position: fixed; right: 22px; bottom: 10px; z-index: 30; width: 112px;
+  filter: drop-shadow(0 8px 14px rgba(10, 25, 40, .28));
+  transition: right .9s cubic-bezier(.45,.05,.3,1.1), bottom .9s cubic-bezier(.45,.05,.3,1.1),
+              transform .9s cubic-bezier(.45,.05,.3,1.1);
+}
+.kadi-login-gov { animation: kadi-login-bob 3.4s ease-in-out infinite; }
+@keyframes kadi-login-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+.kadi-login svg { display: block; overflow: visible; }
+.kl-gozler { transition: transform .15s; }
+.kl-goz { transform-box: fill-box; transform-origin: center; animation: kadi-login-kirp 5.2s infinite; }
+.kl-goz.kl-g2 { animation-delay: .07s; }
+.kl-goz-ic { filter: drop-shadow(0 0 5px #2fd6e8); }
+@keyframes kadi-login-kirp { 0%, 93%, 100% { transform: scaleY(1); } 95.5% { transform: scaleY(.08); } }
+.kadi-login-balon {
+  position: absolute; bottom: calc(100% + 12px); right: -4px; min-width: 170px; max-width: 240px;
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(135deg, #14b8aa, #35648f 55%, #0f2a43) border-box;
+  color: #122a40; border: 1.5px solid transparent; border-radius: 14px 14px 5px 14px;
+  padding: 8px 13px 10px; font-size: 12.5px; line-height: 1.5;
+  box-shadow: 0 3px 8px rgba(15, 42, 67, .10), 0 16px 34px rgba(15, 42, 67, .18);
+  opacity: 0; transform: translateY(8px) scale(.9); transform-origin: bottom right;
+  transition: opacity .28s, transform .34s cubic-bezier(.3, 1.4, .5, 1); pointer-events: none;
+}
+.kl-balon-ad {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 10px; font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase;
+  color: #14b8aa; margin-bottom: 3px;
+}
+.kl-balon-ad::before {
+  content: ""; width: 6px; height: 6px; border-radius: 50%;
+  background: #2fd6e8; box-shadow: 0 0 6px #2fd6e8;
+  animation: kl-isik 2.6s ease-in-out infinite;
+}
+@keyframes kl-isik { 0%, 100% { opacity: 1; } 50% { opacity: .4; } }
+.kadi-login-balon.kl-gorunur { opacity: 1; transform: translateY(0) scale(1); }
+/* sifre modu: Nobetci Botlar gibi Kadi de gozunu obur tarafa kacirir */
+body.kds-kacir .kl-gozler { transform: translate(-4.2px, -1.6px) !important; }
+body.kds-kacir .kl-goz { animation: none; }
+/* giris gonderildi: ekran ortasina suzulur, balon ortalanir */
+.kadi-login-merkez {
+  right: calc(50vw - 56px); bottom: calc(50vh - 86px); z-index: 60;
+}
+.kadi-login-merkez .kadi-login-balon {
+  right: auto; left: 50%; transform-origin: bottom center; translate: -50% 0;
+}
+.kadi-login-merkez @media (max-width: 900px) { .kadi-login { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .kadi-login, .kadi-login-gov, .kl-goz { animation: none !important; transition: none !important; }
+}

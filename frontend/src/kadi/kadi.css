@@ -1,0 +1,243 @@
+/* S28 — Kadi bot yoldaş (mockup onaylı tasarım). Sınıflar .kadi- önekli; tokenlar
+ * index.css'teki --kds- çiftleriyle aynı desende: :root açık, :root[data-mod='koyu'] koyu. */
+:root {
+  --kadi-govde: #f4f7fa;
+  --kadi-cizgi: #c3ced9;
+  --kadi-koyu: #22303c;
+  --kadi-koyu-cizgi: #16202a;
+  --kadi-vizor: #101b24;
+  --kadi-goz: #2fd6e8;
+  --kadi-parlak: #ffffff;
+  --kadi-balon-zemin: #ffffff;
+  --kadi-balon-cizgi: #dbe4ee;
+  --kadi-balon-metin: #122a40;
+}
+:root[data-mod='koyu'] {
+  /* gece sürümü: gövde loş, eklemler açık tonda + açık kontur (zemine karışmasın) */
+  --kadi-govde: #d6dfe8;
+  --kadi-cizgi: #94a6b6;
+  --kadi-koyu: #243a4c;
+  --kadi-koyu-cizgi: #8fa5b8;
+  --kadi-vizor: #08121a;
+  --kadi-goz: #3ae7f5;
+  --kadi-parlak: #f2f7fb;
+  --kadi-balon-zemin: #12202e;
+  --kadi-balon-cizgi: #1e3242;
+  --kadi-balon-metin: #e7eef5;
+}
+
+.kadi-kutu {
+  position: fixed;
+  z-index: 1250; /* MUI modal (1300) altında: diyaloglar Kadi'yi örtebilsin */
+  width: 96px;
+  transition: left 0.95s cubic-bezier(0.45, 0.05, 0.3, 1.1), top 0.95s cubic-bezier(0.45, 0.05, 0.3, 1.1);
+  filter: drop-shadow(0 8px 14px rgba(10, 25, 40, 0.28));
+}
+.kadi-gov { animation: kadi-bob 3.4s ease-in-out infinite; cursor: pointer; transition: transform 0.5s; }
+/* 3D beden kendi nefesini alır — CSS sallanması çifte hareket yapmasın (yalnız SVG yedeğinde kalsın) */
+.kadi-gov:has(canvas) { animation: none; }
+@keyframes kadi-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+.kadi-kutu svg { display: block; overflow: visible; }
+.kadi-parca { transform-box: fill-box; }
+.kadi-gozler { transform: translate(var(--kadi-px, 0), var(--kadi-py, 0)); transition: transform 0.15s; }
+.kadi-goz { transform-origin: center; animation: kadi-kirp 5.2s infinite; }
+.kadi-goz.kadi-g2 { animation-delay: 0.07s; }
+.kadi-goz-ic { filter: drop-shadow(0 0 5px var(--kadi-goz)); }
+.kadi-agiz { transform-box: fill-box; transform-origin: center; transition: transform 0.3s; }
+@keyframes kadi-kirp { 0%, 93%, 100% { transform: scaleY(1); } 95.5% { transform: scaleY(0.08); } }
+.kadi-kol { transform-origin: center 10%; transition: transform 0.45s cubic-bezier(0.35, 1.5, 0.6, 1); }
+.kadi-alev { opacity: 0; transform-origin: top center; }
+.kadi-tepe, .kadi-gogus { transition: fill 0.3s; }
+
+/* durumlar */
+.kadi-kutu[data-durum='ucus'] .kadi-gov { transform: rotate(-7deg); }
+.kadi-kutu[data-durum='ucus'] .kadi-alev { opacity: 1; animation: kadi-alevlen 0.18s ease-in-out infinite alternate; }
+@keyframes kadi-alevlen { from { transform: scaleY(0.7); } to { transform: scaleY(1.25); } }
+.kadi-kutu[data-durum='ucus'] .kadi-bacak { transform: rotate(12deg); }
+.kadi-kutu[data-durum='okey'] .kadi-kol-sag { transform: rotate(-145deg); }
+.kadi-kutu[data-durum='okey'] .kadi-goz { animation: none; transform: scaleY(0.5) translateY(-1px); }
+.kadi-kutu[data-durum='okey'] .kadi-agiz { transform: scaleY(1.5); }
+.kadi-kutu[data-durum='dusun'] .kadi-tepe { fill: var(--kds-mor); }
+.kadi-kutu[data-durum='dusun'] .kadi-gogus { fill: var(--kds-mor); }
+.kadi-kutu[data-durum='dusun'] .kadi-anten { animation: kadi-dusun 1s linear infinite; transform-origin: 60px 22px; }
+@keyframes kadi-dusun { 0%, 100% { transform: rotate(-14deg); } 50% { transform: rotate(14deg); } }
+.kadi-kutu[data-durum='uzgun'] .kadi-gov { transform: rotate(5deg); }
+.kadi-kutu[data-durum='uzgun'] .kadi-goz { animation: none; transform: scaleY(0.4) translateY(3px); }
+.kadi-kutu[data-durum='uzgun'] .kadi-agiz { transform: scaleY(-1) translateY(-2px); }
+.kadi-kutu[data-durum='uzgun'] .kadi-anten { transform: rotate(38deg); transform-origin: 60px 22px; transition: transform 0.4s; }
+.kadi-kutu[data-durum='alarm'] .kadi-gov { animation: kadi-zipla 0.45s ease-in-out infinite; }
+@keyframes kadi-zipla { 0%, 100% { transform: translateY(0); } 45% { transform: translateY(-18px); } }
+.kadi-kutu[data-durum='alarm'] .kadi-tepe { fill: #d64545; }
+.kadi-kutu[data-durum='alarm'] .kadi-gogus { fill: #d64545; }
+.kadi-kutu[data-durum='selam'] .kadi-kol-sol { animation: kadi-salla 0.55s ease-in-out 3; }
+@keyframes kadi-salla { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(-120deg); } }
+.kadi-kutu[data-durum='kos'] .kadi-bacak-sol { animation: kadi-kosb 0.3s linear infinite; }
+.kadi-kutu[data-durum='kos'] .kadi-bacak-sag { animation: kadi-kosb 0.3s linear infinite reverse; }
+@keyframes kadi-kosb { 0%, 100% { transform: rotate(18deg); } 50% { transform: rotate(-18deg); } }
+
+/* konuşma balonu — degrade konturlu kart; sağ-alt köşe Kadi'ye doğru sıkışır (kuyruk yerine),
+ * başlıkta isim + duruma göre renklenen ışık */
+.kadi-balon {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  right: -4px;
+  min-width: 170px;
+  max-width: 250px;
+  background:
+    linear-gradient(var(--kadi-balon-zemin), var(--kadi-balon-zemin)) padding-box,
+    linear-gradient(135deg, #14b8aa, #35648f 55%, #0f2a43) border-box;
+  color: var(--kadi-balon-metin);
+  border: 1.5px solid transparent;
+  border-radius: 14px 14px 5px 14px;
+  padding: 8px 13px 10px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  box-shadow: 0 3px 8px rgba(15, 42, 67, 0.10), 0 16px 34px rgba(15, 42, 67, 0.18);
+  opacity: 0;
+  transform: translateY(8px) scale(0.9);
+  transform-origin: bottom right;
+  transition: opacity 0.28s, transform 0.34s cubic-bezier(0.3, 1.4, 0.5, 1);
+  pointer-events: none;
+}
+.kadi-balon.kadi-gorunur { opacity: 1; transform: translateY(0) scale(1); }
+
+/* Kadi üst bölgeye uçtuğunda balon ALTINA açılır (banta/tavana taşmasın) */
+.kadi-kutu.kadi-balon-altta .kadi-balon {
+  bottom: auto;
+  top: calc(100% + 10px);
+  transform-origin: top right;
+  border-radius: 5px 14px 14px 14px;
+}
+
+/* eylemli balon: tıklanabilir — düğmeler + soru girdisi */
+.kadi-balon.kadi-etkilesimli { pointer-events: auto; }
+.kadi-balon-eylemler { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+.kadi-balon-eylemler button {
+  border: 1px solid #14b8aa;
+  background: transparent;
+  color: #14b8aa;
+  border-radius: 8px;
+  padding: 4px 12px;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+.kadi-balon-eylemler button:first-child { background: #14b8aa; color: #fff; }
+.kadi-balon-eylemler button:hover { filter: brightness(1.08); }
+.kadi-soru-girdi {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 7px 10px;
+  border: 1px solid var(--kadi-balon-cizgi);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--kadi-balon-metin);
+  font-size: 12.5px;
+  font-family: inherit;
+}
+.kadi-soru-girdi:focus { outline: 2px solid #14b8aa; outline-offset: -1px; }
+.kadi-balon-ad {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: #14b8aa;
+  margin-bottom: 3px;
+}
+.kadi-balon-ad::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--kadi-goz);
+  box-shadow: 0 0 6px var(--kadi-goz);
+  animation: kadi-isik 2.6s ease-in-out infinite;
+}
+@keyframes kadi-isik { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+/* ışık duruma göre renklenir — balon konuşurken Kadi'nin hâlini de söyler */
+.kadi-kutu[data-durum='dusun'] .kadi-balon-ad::before { background: var(--kds-mor); box-shadow: 0 0 6px var(--kds-mor); }
+.kadi-kutu[data-durum='uzgun'] .kadi-balon-ad::before,
+.kadi-kutu[data-durum='alarm'] .kadi-balon-ad::before { background: #d64545; box-shadow: 0 0 6px #d64545; }
+.kadi-kutu[data-durum='okey'] .kadi-balon-ad::before { background: #1a9d6b; box-shadow: 0 0 6px #1a9d6b; }
+
+/* küçültme düğmesi + mini hal */
+.kadi-mini-btn {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--kadi-balon-zemin);
+  border: 1px solid var(--kadi-balon-cizgi);
+  color: var(--kadi-balon-metin);
+  font-size: 11px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.kadi-kutu:hover .kadi-mini-btn { opacity: 1; }
+.kadi-kutu.kadi-mini { width: 44px; }
+.kadi-kutu.kadi-mini .kadi-balon { display: none; }
+
+/* MERKEZ (yükleme sahnesi): perdenin ÜSTÜNE çıkar, UÇMAZ — ortada ışınlanıp belirir
+ * (yerel yüklemeler çok hızlı; uçuş sürerken sahne biterdi), boyu büyür, balon ortalanır */
+.kadi-kutu.kadi-merkez {
+  z-index: 1400;
+  transition: none;
+  width: 148px;
+}
+.kadi-kutu.kadi-merkez canvas {
+  width: 148px !important;
+  height: 172px !important;
+}
+.kadi-kutu.kadi-merkez .kadi-gov { animation: kadi-belirme .38s cubic-bezier(.3, 1.5, .5, 1); }
+@keyframes kadi-belirme {
+  from { transform: scale(.45); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+.kadi-kutu.kadi-merkez .kadi-balon {
+  right: auto;
+  left: 50%;
+  translate: -50% 0;
+  transform-origin: bottom center;
+  border-radius: 14px;
+  text-align: center;
+}
+
+/* MERKEZ SAHNESİNİN PERDESİ (24 Ağu 2026): sahne artık kendi perdesini getirir — sayfalar
+ * kadiYukleniyor'u doğrudan çağırdığında da ekran kararır (önce perde yalnız LoadingCurtain
+ * bileşenindeydi; İçe Alım'da Kadi perdesiz kalıp balonu kartların arasında kayboluyordu).
+ * z-index: Kadi merkezde 1400; perde onun ALTINDA ama MUI modalın (1300) üstünde. */
+.kadi-perde {
+  position: fixed;
+  inset: 0;
+  z-index: 1390;
+  animation: kadi-perde-girisi 0.18s ease-out;
+}
+/* YOĞUN: sayfa yükleniyor ya da kayıt/silme gibi kritik iş sürüyor — arka plan hem kararır hem
+ * TIKLAMAYI YUTAR (kullanıcı kararı 24 Ağu 2026): yarım kalmış bir işin üstüne ikinci iş
+ * başlatılmasın. HAFİF: iş sürüyor ama kullanıcı ekranı incelemeye/iptale devam edebilsin —
+ * tıklama geçer (ör. Soru Sor'un "Durdur" düğmesi). */
+.kadi-perde-yogun {
+  background: rgba(15, 45, 78, 0.28);
+  backdrop-filter: blur(2px);
+  pointer-events: auto;
+  cursor: progress;
+}
+.kadi-perde-hafif { background: rgba(15, 45, 78, 0.08); pointer-events: none; }
+@keyframes kadi-perde-girisi { from { opacity: 0; } to { opacity: 1; } }
+
+/* dar ekranda gizle (mobilde yer kaplamasın) */
+@media (max-width: 760px) { .kadi-kutu { display: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .kadi-kutu { transition: none; }
+  .kadi-gov, .kadi-goz, .kadi-kol, .kadi-bacak, .kadi-anten, .kadi-alev { animation: none !important; }
+}

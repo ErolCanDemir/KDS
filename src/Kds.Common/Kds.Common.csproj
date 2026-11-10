@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <!-- Cross-cutting infrastructure: CQRS markers (ICommand/IQuery) + validation pipeline.
+         Domain types (requests/DTOs/enums) do NOT belong here - they live in the feature slice /
+         Contracts kernel. K4: MediatR v13+ is commercially licensed; [12.5.0,13.0.0) is deliberate. -->
+    <PackageReference Include="MediatR" Version="[12.5.0,13.0.0)" />
+    <PackageReference Include="FluentValidation" Version="12.0.0" />
+  </ItemGroup>
+
+</Project>

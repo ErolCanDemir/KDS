@@ -1,0 +1,233 @@
+{
+  "realm": "kds",
+  "enabled": true,
+  "sslRequired": "none",
+  "displayName": "KDS",
+  "loginTheme": "kds",
+  "internationalizationEnabled": true,
+  "supportedLocales": [
+    "tr",
+    "en"
+  ],
+  "defaultLocale": "tr",
+  "accessTokenLifespan": 900,
+  "roles": {
+    "realm": [
+      {
+        "name": "admin",
+        "description": "Tenant yoneticisi: kullanici/rol, baglanti, tum ekranlar"
+      },
+      {
+        "name": "gelistirici",
+        "description": "Veri haritasi + sorgu/rapor + dashboard tasarlar"
+      },
+      {
+        "name": "musteri",
+        "description": "Yalniz yetkili rapor/dashboard goruntuler"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "kds-web",
+      "name": "KDS Web (React SPA)",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "redirectUris": [
+        "http://localhost:5173/*"
+      ],
+      "webOrigins": [
+        "http://localhost:5173"
+      ],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "http://localhost:5173/*"
+      },
+      "protocolMappers": [
+        {
+          "name": "kds-api-audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "config": {
+            "included.client.audience": "kds-api",
+            "id.token.claim": "false",
+            "access.token.claim": "true"
+          }
+        },
+        {
+          "name": "tenant-id",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "config": {
+            "user.attribute": "tenant_id",
+            "claim.name": "tenant_id",
+            "jsonType.label": "String",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true",
+            "multivalued": "false"
+          }
+        },
+        {
+          "name": "servis-kodu",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "config": {
+            "user.attribute": "servis_kodu",
+            "claim.name": "servis_kodu",
+            "jsonType.label": "String",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true",
+            "multivalued": "false"
+          }
+        }
+      ]
+    },
+    {
+      "clientId": "kds-api",
+      "name": "KDS API (kaynak sunucu)",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "bearerOnly": true
+    },
+    {
+      "clientId": "kds-yonetim",
+      "name": "KDS Yonetim (rol servisi)",
+      "description": "S27 Roles & Yetkiler: API'nin Keycloak Admin API'sine cikan servis hesabi (client_credentials). Sir uretimde MUTLAKA degistirilir (infra/KURULUM.md).",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "serviceAccountsEnabled": true,
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "secret": "kds-yonetim-dev-sir"
+    }
+  ],
+  "users": [
+    {
+      "username": "service-account-kds-yonetim",
+      "enabled": true,
+      "serviceAccountClientId": "kds-yonetim",
+      "clientRoles": {
+        "realm-management": [
+          "view-realm",
+          "view-users",
+          "manage-users",
+          "manage-realm"
+        ]
+      }
+    },
+    {
+      "username": "admin",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "admin@kds.local",
+      "firstName": "Admin",
+      "lastName": "Deneme",
+      "attributes": {
+        "tenant_id": [
+          "11111111-1111-1111-1111-111111111111"
+        ]
+      },
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "admin"
+      ]
+    },
+    {
+      "username": "gelistirici",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "gelistirici@kds.local",
+      "firstName": "Gelistirici",
+      "lastName": "Deneme",
+      "attributes": {
+        "tenant_id": [
+          "11111111-1111-1111-1111-111111111111"
+        ]
+      },
+      "credentials": [
+        {
+          "type": "password",
+          "value": "gelistirici",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "gelistirici"
+      ]
+    },
+    {
+      "username": "musteri",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "musteri@kds.local",
+      "firstName": "Musteri",
+      "lastName": "Ornek",
+      "attributes": {
+        "tenant_id": [
+          "22222222-2222-2222-2222-222222222222"
+        ]
+      },
+      "credentials": [
+        {
+          "type": "password",
+          "value": "musteri",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "musteri"
+      ]
+    },
+    {
+      "username": "bayi",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "bayi@kds.local",
+      "firstName": "Bayi",
+      "lastName": "Ornek",
+      "attributes": {
+        "tenant_id": [
+          "11111111-1111-1111-1111-111111111111"
+        ],
+        "servis_kodu": [
+          "1632"
+        ]
+      },
+      "credentials": [
+        {
+          "type": "password",
+          "value": "bayi",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "musteri"
+      ]
+    }
+  ],
+  "components": {
+    "org.keycloak.userprofile.UserProfileProvider": [
+      {
+        "providerId": "declarative-user-profile",
+        "subComponents": {},
+        "config": {
+          "kc.user.profile.config": [
+            "{\"attributes\":[{\"name\":\"username\",\"displayName\":\"${username}\",\"validations\":{\"length\":{\"min\":3,\"max\":255},\"username-prohibited-characters\":{},\"up-username-not-idn-homograph\":{}},\"permissions\":{\"view\":[\"admin\",\"user\"],\"edit\":[\"admin\",\"user\"]},\"multivalued\":false},{\"name\":\"email\",\"displayName\":\"${email}\",\"validations\":{\"email\":{},\"length\":{\"max\":255}},\"required\":{\"roles\":[\"user\"]},\"permissions\":{\"view\":[\"admin\",\"user\"],\"edit\":[\"admin\",\"user\"]},\"multivalued\":false},{\"name\":\"firstName\",\"displayName\":\"${firstName}\",\"validations\":{\"length\":{\"max\":255},\"person-name-prohibited-characters\":{}},\"required\":{\"roles\":[\"user\"]},\"permissions\":{\"view\":[\"admin\",\"user\"],\"edit\":[\"admin\",\"user\"]},\"multivalued\":false},{\"name\":\"lastName\",\"displayName\":\"${lastName}\",\"validations\":{\"length\":{\"max\":255},\"person-name-prohibited-characters\":{}},\"required\":{\"roles\":[\"user\"]},\"permissions\":{\"view\":[\"admin\",\"user\"],\"edit\":[\"admin\",\"user\"]},\"multivalued\":false}],\"groups\":[{\"name\":\"user-metadata\",\"displayHeader\":\"User metadata\",\"displayDescription\":\"Attributes, which refer to user metadata\"}],\"unmanagedAttributePolicy\":\"ENABLED\"}"
+          ]
+        }
+      }
+    ]
+  }
+}

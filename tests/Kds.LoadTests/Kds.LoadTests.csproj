@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <!-- Yük koşucusu; birim test toplayıcısı bunu almasın (kendi Main'i var). -->
+    <IsTestProject>false</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- KdsWebFactory + TestAuthHandler yeniden kullanımı (API'yi bellekte + sahte kimlikle ayağa kaldırır). -->
+    <ProjectReference Include="..\Kds.Tests\Kds.Tests.csproj" />
+  </ItemGroup>
+
+</Project>

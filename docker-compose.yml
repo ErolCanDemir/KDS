@@ -1,0 +1,29 @@
+# Geliştirme altyapısı: Keycloak + MSSQL (00-analiz §10 - v1 barındırma da Compose'dur).
+# Parolalar YALNIZ geliştirme içindir. Realm kurulumu (kds realm'i, kds-web/kds-api
+# istemcileri, admin/gelistirici/musteri rolleri) infra/kds-realm.json'da.
+# NOT: Bu makinede Docker kurulu değil - compose canlı doğrulaması S3'e borçtur.
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.3
+    command: start-dev
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+    ports:
+      - "8080:8080"
+    volumes:
+      - keycloak-veri:/opt/keycloak/data
+
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Kds!Gelistirme1"
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql-veri:/var/opt/mssql
+
+volumes:
+  keycloak-veri:
+  mssql-veri:

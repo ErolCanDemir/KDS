@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>KDS · Analiz Dokümanı</title>
+<style>
+  @page { size: A4; margin: 16mm 15mm; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Segoe UI", "Segoe UI Emoji", Arial, sans-serif;
+    font-size: 10.5pt; line-height: 1.5; color: #1c2430; margin: 0;
+  }
+  /* Kapak bloğu */
+  .kapak {
+    background: linear-gradient(135deg, #0f2d4e 0%, #14507a 60%, #0e6f7a 100%);
+    color: #fff; border-radius: 10px; padding: 22px 26px; margin-bottom: 18px;
+  }
+  .kapak .ust { font-size: 9pt; letter-spacing: 2px; text-transform: uppercase; opacity: .85; }
+  .kapak h1 { margin: 6px 0 4px; font-size: 21pt; }
+  .kapak .alt { font-size: 10pt; opacity: .92; }
+  .kapak .tarih { margin-top: 10px; font-size: 9pt; opacity: .8; }
+
+  h2 {
+    font-size: 13pt; color: #0f2d4e; margin: 20px 0 8px;
+    border-bottom: 2.5px solid #0e6f7a; padding-bottom: 3px;
+    page-break-after: avoid;
+  }
+  h2 .no { color: #0e6f7a; margin-right: 6px; }
+  h3 { font-size: 11pt; color: #14507a; margin: 12px 0 4px; page-break-after: avoid; }
+  p { margin: 6px 0; }
+  ul { margin: 6px 0 6px 2px; padding-left: 18px; }
+  li { margin: 3px 0; }
+
+  blockquote {
+    margin: 8px 0; padding: 8px 14px; background: #eef6f7;
+    border-left: 4px solid #0e6f7a; border-radius: 0 6px 6px 0; color: #123;
+  }
+  code {
+    font-family: Consolas, "Courier New", monospace; font-size: 9.5pt;
+    background: #eef1f5; padding: 1px 4px; border-radius: 3px; color: #0f2d4e;
+  }
+  strong { color: #0f2d4e; }
+
+  table {
+    border-collapse: collapse; width: 100%; margin: 8px 0 12px;
+    font-size: 9.5pt; page-break-inside: auto;
+  }
+  tr { page-break-inside: avoid; }
+  th {
+    background: #0f2d4e; color: #fff; text-align: left;
+    padding: 5px 8px; border: 1px solid #0f2d4e; font-weight: 600;
+  }
+  td { border: 1px solid #c3ccd6; padding: 5px 8px; vertical-align: top; }
+  tbody tr:nth-child(even) { background: #f2f6fa; }
+  .uyari { color: #a33d00; font-weight: 600; }
+  .rozet {
+    display: inline-block; background: #0e6f7a; color: #fff; border-radius: 10px;
+    padding: 0 8px; font-size: 8.5pt; font-weight: 600;
+  }
+  .ici-disi { display: flex; gap: 10px; }
+  .ici-disi > div { flex: 1; border: 1px solid #c3ccd6; border-radius: 8px; padding: 8px 12px; }
+  .ici-disi .ici { border-top: 4px solid #1c7a43; }
+  .ici-disi .disi { border-top: 4px solid #a33d00; }
+  .ici-disi h3 { margin-top: 0; }
+  .sayfa-kes { page-break-before: always; }
+</style>
+</head>
+<body>
+
+<div class="kapak">
+  <div class="ust">SQLST Ürün Ailesi · İkinci Ürün</div>
+  <h1>KDS — Analiz Dokümanı <span style="font-size:11pt; font-weight:400;">(00 · çalışma adı)</span></h1>
+  <div class="alt">Web tabanlı, SaaS, self-servis raporlama ve karar destek sistemi —
+  sürükle-bırak sorgu tasarımı + ham SQL + grafik/dashboard</div>
+  <div class="tarih">v1 analizi · 4 Ağustos 2026 · İş sırası: docs/roadmap.md (TEK takip yeri)</div>
+</div>
+
+<h2><span class="no">1.</span>Vizyon</h2>
+<blockquote>Müşterinin verisi üzerinde, <strong>SQL bilmeyen kullanıcının sürükle-bırakla
+sorgu tasarlayıp</strong> sonucu tablo/grafik/dashboard olarak görebildiği; SQL bilen
+kullanıcının da aynı yerde ham SQL çalıştırabildiği, çok kiracılı bir raporlama ürünü.</blockquote>
+<p><strong>Turnusol testi:</strong> <em>"Bu rapor işi için IT'ye/geliştiriciye gitmem
+gerekir mi?"</em> — v1'e girecek her özellik bu sorunun cevabını "hayır"a yaklaştırmalı.</p>
+<p><strong>SQLST ile ilişki (kullanıcı kararı, 2026-08-04):</strong> tamamen
+<strong>ayrı ürün</strong> — kod paylaşımı yok. Taşınan şey desen bilgisidir: lehçe
+soyutlaması (SQLST v3 deneyimi), lisans denetimi geleneği, roadmap/dilim disiplini,
+"yarım özellik yok → gizlenir" ilkesi.</p>
+
+<h2><span class="no">2.</span>Kesinleşen kararlar (2026-08-04, kullanıcı)</h2>
+<table>
+<thead><tr><th style="width:34px">#</th><th style="width:44%">Karar</th><th>Not</th></tr></thead>
+<tbody>
+<tr><td>K1</td><td>Yalnız <strong>SaaS</strong>; on-prem kurulum yok</td><td>Tenant mimarisi ve barındırmayı bu belirler (§8, §10)</td></tr>
+<tr><td>K2</td><td>v1 hedef motor yalnız <strong>MSSQL</strong></td><td>SQL üretimi lehçe arkasında — çok-motor kapısı açık kalır (§5)</td></tr>
+<tr><td>K3</td><td>v1 kapsamı tam: tablo sonuç + export + grafik + <strong>dashboard</strong></td><td>§11</td></tr>
+<tr><td>K4</td><td>Backend <strong>.NET 10 LTS</strong>, CQRS + <strong>MediatR 12.x</strong></td><td>v13+ ticari lisansa geçti; <span class="uyari">12.5.0'a sabitle, [12.*,13) üst sınır</span> (Apache 2.0)</td></tr>
+<tr><td>K5</td><td><strong>EF Core + ince UnitOfWork yalnız metadata DB'de</strong></td><td>DbContext zaten UoW; generic repository töreni yok (§6)</td></tr>
+<tr><td>K6</td><td>Klasik katman: <strong>Api / Business / Dal (+ Contracts)</strong></td><td>Ekip alışkanlığıyla uyumlu; Business = CQRS handler'ları</td></tr>
+<tr><td>K7</td><td>Frontend <strong>React + TypeScript</strong></td><td>§9</td></tr>
+<tr><td>K8</td><td>Kimlik: <strong>Keycloak</strong> (OIDC)</td><td>Ayrı ürün olsa da ailede SSO potansiyeli açık kalır</td></tr>
+<tr><td>K9</td><td>Sorgu = <strong>JSON modeli</strong>; SQL üretimi backend'de</td><td>§5</td></tr>
+<tr><td>K10</td><td><strong>Veri haritası</strong> (eski adı: semantik katman / veri modeli) + ham SQL editörü birlikte</td><td>§4</td></tr>
+<tr><td>K11</td><td><strong>İki çalıştırma modu</strong>: Canlı + İçe Alım, config'den seçilir</td><td>§3</td></tr>
+</tbody>
+</table>
+
+<h2><span class="no">3.</span>Çalıştırma modları — "hedef DB'de mi, kendi DB'me çekip mi?"</h2>
+<p>Kullanıcı sorusu (2026-08-04): <em>"İki özelliği de koysak, config'den seçsek: hedef
+DB'de çalıştır ya da bir job'la kendi DB'me çekip orada çalıştır — olabilir mi?"</em></p>
+<blockquote><strong>Cevap: evet, olur ve sektörde birebir karşılığı var — Power BI'daki
+DirectQuery vs Import ayrımı.</strong> İki mod da v1'e girer; <strong>bağlantı düzeyinde
+varsayılan + veri haritası düzeyinde geçersiz kılma</strong> ile seçilir.</blockquote>
+<table>
+<thead><tr><th></th><th>Mod A · <strong>Canlı</strong> (DirectQuery)</th><th>Mod B · <strong>İçe Alım</strong> (Import)</th></tr></thead>
+<tbody>
+<tr><td><strong>Sorgu nerede koşar</strong></td><td>Müşterinin hedef DB'sinde</td><td>KDS'nin kendi deposunda (tenant DB'si)</td></tr>
+<tr><td><strong>Veri tazeliği</strong></td><td>Anlık</td><td>Son senkron anı (zamanlanmış job)</td></tr>
+<tr><td><strong>Kaynak DB'ye yük</strong></td><td>Her rapor açılışında</td><td>Yalnız senkron anında</td></tr>
+<tr><td><strong>Depolama maliyeti</strong></td><td>Yok</td><td>Var (tenant deposu büyür)</td></tr>
+<tr><td><strong>Rapor hızı</strong></td><td>Kaynağa ve ağa bağlı</td><td>Öngörülebilir, genelde hızlı</td></tr>
+<tr><td><strong>İyi uyduğu yer</strong></td><td>Operasyonel/anlık raporlar</td><td>Yoğun dashboard'lar, geçmiş analizi, yavaş/uzak kaynaklar</td></tr>
+</tbody>
+</table>
+<h3>SaaS'ın asıl zorluğu — müşteri DB'sine erişim</h3>
+<p>Müşteri MSSQL'i genelde şirket ağındadır; bizim bulutumuz ona kendiliğinden ulaşamaz.</p>
+<ul>
+<li><strong>v1 varsayımı:</strong> hedef DB SaaS'tan erişilebilirdir (Azure SQL /
+internete açık MSSQL / IP whitelist / müşteri VPN'i). Ürün belgeleri bunu kurulum
+önkoşulu yazar.</li>
+<li><strong>KDS Ajanı</strong> (müşteri ağına kurulan, dışarı doğru bağlantı açan hafif
+gateway — Power BI On-premises Data Gateway modeli) <strong>v1 DIŞI</strong>,
+araştırma kuyruğunda.</li>
+<li>Mod B bu problemi hafifletir: erişim yalnız senkron job anında gerekir; ileride ajan
+gelirse aynı job müşteri tarafında koşup veriyi <strong>itme (push)</strong> modeliyle
+gönderir — mimari bugünden buna göre çizilir (senkron işi tek modülde toplanır).</li>
+</ul>
+<p><strong>İçe alım hattı (v1):</strong> Hangfire job → veri haritasında seçilen tablolar →
+tenant'ın kendi deposuna <strong>tam yükleme</strong> (truncate+load) → sorgular orada
+koşar. Zamanlama (cron), son senkron durumu/süresi/satır sayısı UI'da. Artımlı yükleme
+(rowversion/CDC) v1 DIŞI — araştırma kuyruğu.</p>
+
+<h2><span class="no">4.</span>Veri haritası (eski adı: semantik katman)</h2>
+<p>Varlık zinciri: <strong>Bağlantı → Veri Haritası → Sorgu/Rapor → Dashboard</strong></p>
+<ul>
+<li><strong>Bağlantı:</strong> sunucu + DB + salt-okunur kimlik; şifre şifreli saklanır (§7).</li>
+<li><strong>Veri Haritası:</strong> tasarımcının seçtiği tablolar; dostça adlar
+(<code>FKTHR_MSTR</code> → "Fatura Ana"); önceden tanımlı ilişkiler (join'ler);
+kolonlarda <strong>boyut/ölçü</strong> işareti; çalıştırma modu seçimi (canlı / içe alım).</li>
+<li><strong>Sorgu/Rapor:</strong> JSON sorgu modeli + görselleştirme tercihi; klasörlenir, yetkilenir.</li>
+<li><strong>Dashboard:</strong> raporların grid yerleşimi + dashboard-düzeyi filtreler.</li>
+</ul>
+<p>Son kullanıcı ham tabloya değil veri haritasına bakar; ham SQL ayrı ekranda, ileri
+kullanıcı rolüne açıktır. KDS'lerde başarıyı bu katman belirler — son kullanıcı join
+kuramaz, kurmamalı; ilişkiyi harita tanımlar, tasarımcı sadece sürükler.</p>
+
+<h2><span class="no">5.</span>Sorgu temsili ve SQL üretimi</h2>
+<p>Tasarlanan sorgu <strong>SQL olarak değil, JSON modeli (AST) olarak</strong> saklanır;
+SQL'e çeviri backend'de, motor lehçesine göre yapılır. Kazanımlar: sorgu
+versiyonlanabilir/denetlenebilir, UI'dan bağımsız doğrulanabilir, çok-motor kapısı açık kalır.</p>
+<p><strong>v1 JSON modeli kapsamı:</strong> kaynak varlıklar (modelden) · kolon seçimi ·
+join (modeldeki ilişkilerden) · filtre ağacı (AND/OR, parametreli) · GROUP BY + aggregate
+(SUM/COUNT/AVG/MIN/MAX) · sıralama · limit/sayfalama.<br>
+<strong>v1 DIŞI:</strong> alt sorgu, UNION, window fonksiyonları → ihtiyaç ham SQL
+ekranına yönlendirilir.</p>
+<p>Hat: React tasarımcı → JSON → doğrulama (şema + model/yetki süzgeci) →
+<code>ISorguUretici</code> (v1: <code>MssqlSorguUretici</code>) → <strong>parametreli</strong>
+SQL → çalıştırıcı.</p>
+<p><strong>Kurallar</strong> (MersisMSSQL derslerinin mirası): nesne adları daima
+QUOTENAME mantığıyla parantezlenir; değerler asla birleştirilmez, daima parametre;
+üretilen SQL kullanıcıya <strong>"SQL'i Göster"</strong> ile sunulur (şeffaflık +
+öğrenme + hata ayıklama).</p>
+
+<h2><span class="no">6.</span>İki veri dünyası (mimarinin bel kemiği)</h2>
+<table>
+<thead><tr><th style="width:16%"></th><th>Metadata dünyası</th><th>Çalıştırma dünyası</th></tr></thead>
+<tbody>
+<tr><td><strong>Ne tutar / yapar</strong></td><td>Tenant, kullanıcı-yetki, bağlantı, veri haritası, rapor, dashboard, job tanımı, audit</td><td>Tasarlanan/yazılan sorguların icrası + şema keşfi</td></tr>
+<tr><td><strong>Nerede</strong></td><td>KDS'nin kendi DB'si</td><td>Müşteri hedef DB'si <strong>veya</strong> tenant içe-alım deposu</td></tr>
+<tr><td><strong>Erişim tekniği</strong></td><td>EF Core + ince <code>IUnitOfWork</code></td><td>Saf ADO.NET (<code>Microsoft.Data.SqlClient</code>); EF <strong>asla</strong> girmez</td></tr>
+<tr><td><strong>Koruma</strong></td><td>Normal uygulama kuralları</td><td>Read-only bağlantı, <code>CommandTimeout</code>, reader'da satır sınırı, <code>CancellationToken</code> ile iptal, audit</td></tr>
+</tbody>
+</table>
+<p>Bu ayrım birinci günden proje yapısına yansır: çalıştırma dünyası ayrı modüldür ve
+metadata dünyasının DbContext'ine referans veremez.</p>
+
+<h2><span class="no">7.</span>Güvenlik</h2>
+<ul>
+<li><strong>SELECT-only bekçisi:</strong> <code>Microsoft.SqlServer.TransactSql.ScriptDom</code>
+(MIT, resmî T-SQL parser) ile <strong>AST doğrulaması</strong> — string kontrolü değil.
+Yalnız SELECT statement'ları geçer; çoklu statement, DDL/DML/EXEC, <code>INTO</code>,
+hint istismarları red. Hem ham SQL ekranı hem üretilen SQL aynı bekçiden geçer (tek kapı).</li>
+<li><strong>İkinci katman:</strong> hedef bağlantılar salt-okunur DB kullanıcısıyla
+kurulur; ürün belgeleri müşteriden read-only login ister (bekçi delinse bile yazamaz).</li>
+<li><strong>Bağlantı şifreleri:</strong> ASP.NET Data Protection ile şifreli, key ring
+kalıcı depoda; düz metin hiçbir yerde durmaz (vault entegrasyonu araştırma kuyruğu).</li>
+<li><strong>Limitler:</strong> satır sınırı + zaman aşımı (tenant/sorgu bazlı
+ayarlanabilir) + tenant başına eşzamanlı sorgu sınırı.</li>
+<li><strong>Keycloak:</strong> tek realm; tenant ayrımı organizasyon/grup + token
+claim'i; kaba roller token'da (<strong>Admin / Geliştirici / Müşteri</strong>);
+rapor/klasör-bazlı ince yetki metadata DB'de.</li>
+<li><strong>Audit:</strong> kim, hangi tenant'ta, hangi sorguyu (JSON/SQL), hangi
+bağlantıda, ne zaman, kaç satır/ms — her icra kaydedilir.</li>
+</ul>
+
+<h2><span class="no">8.</span>Multi-tenancy</h2>
+<ul>
+<li><strong>Metadata DB:</strong> tek DB + her tabloda <code>TenantId</code> + EF Core
+global query filter.</li>
+<li><strong>İçe alım deposu:</strong> <strong>tenant başına ayrı DB</strong> — veri
+izolasyonu, müşteri ayrılınca temiz silme, yedek/geri yükleme kolaylığı, gürültülü
+komşu sınırı.</li>
+<li><strong>Keycloak:</strong> tek realm (realm-per-tenant bilinçli DIŞI — yönetim yükü).</li>
+</ul>
+
+<h2 class="sayfa-kes"><span class="no">9.</span>Teknoloji seçimi (lisans denetimli — SQLST geleneği)</h2>
+<table>
+<thead><tr><th>Bileşen</th><th>Seçim</th><th>Lisans</th><th>Not</th></tr></thead>
+<tbody>
+<tr><td>Runtime</td><td>.NET 10 LTS</td><td>MIT</td><td></td></tr>
+<tr><td>CQRS</td><td><strong>MediatR 12.5.0</strong></td><td>Apache 2.0</td><td><span class="uyari">⚠ v13+ ticari</span> — pakette <code>[12.*,13)</code> üst sınırı zorunlu</td></tr>
+<tr><td>Metadata ORM</td><td>EF Core</td><td>MIT</td><td>Yalnız metadata dünyası</td></tr>
+<tr><td>SQL istemci</td><td>Microsoft.Data.SqlClient</td><td>MIT</td><td>Çalıştırma dünyası saf ADO.NET</td></tr>
+<tr><td>T-SQL parser</td><td>Microsoft.SqlServer.TransactSql.ScriptDom</td><td>MIT</td><td>SELECT-only bekçisi</td></tr>
+<tr><td>Doğrulama</td><td>FluentValidation</td><td>Apache 2.0</td><td></td></tr>
+<tr><td>Job/zamanlayıcı</td><td><strong>Hangfire</strong></td><td>LGPL-3.0</td><td>SaaS'ta dağıtım yok → uyumlu; hazır dashboard artı. Alternatif: Quartz.NET (Apache 2.0)</td></tr>
+<tr><td>Kimlik</td><td>Keycloak (konteyner)</td><td>Apache 2.0</td><td></td></tr>
+<tr><td>Metadata + depo DB</td><td><strong>MSSQL</strong></td><td>—</td><td>v1 motoru zaten MSSQL, ekip uzmanlığı; Express 10 GB/DB sınırıyla başlanabilir. Barındırma maliyeti araştırma kuyruğunda</td></tr>
+<tr><td>Frontend</td><td>React 19 + TypeScript + Vite</td><td>MIT</td><td></td></tr>
+<tr><td>UI bileşen kiti</td><td><strong>MUI (Material UI)</strong></td><td>MIT</td><td>Kullanıcı kararı 2026-08-04</td></tr>
+<tr><td>OIDC istemci</td><td>react-oidc-context</td><td>MIT</td><td><code>keycloak-js</code> yerine standart OIDC</td></tr>
+<tr><td>Kanvas</td><td>React Flow (xyflow)</td><td>MIT</td><td>QMS org şemasından tanıdık</td></tr>
+<tr><td>Filtre kurucu</td><td>react-querybuilder</td><td>MIT</td><td></td></tr>
+<tr><td>Sonuç grid</td><td><strong>TanStack Table + Virtual</strong></td><td>MIT</td><td><span class="uyari">⚠ AG Grid tuzak:</span> Community MIT ama pivot/server-side model <strong>Enterprise-ücretli</strong></td></tr>
+<tr><td>Grafik</td><td>Apache ECharts</td><td>Apache 2.0</td><td>Tablo/çubuk/çizgi/pasta/sayı kartı v1</td></tr>
+<tr><td>Dashboard yerleşimi</td><td>react-grid-layout</td><td>MIT</td><td></td></tr>
+<tr><td>SQL editörü</td><td>Monaco Editor</td><td>MIT</td><td>SQLST/MiniSSMS deneyimi</td></tr>
+<tr><td>Excel export</td><td>ClosedXML</td><td>MIT</td><td>Backend'de üretilir</td></tr>
+<tr><td>PDF export</td><td><strong>karar bekliyor</strong></td><td>—</td><td><span class="uyari">⚠ QuestPDF Community gelir eşiğine bağlı ($1M)</span> — v1'de Excel/CSV yeter, PDF araştırma kuyruğu</td></tr>
+</tbody>
+</table>
+
+<h2><span class="no">10.</span>Barındırma ve Kubernetes analizi</h2>
+<blockquote><strong>Karar: v1'de Kubernetes YOK.</strong> Tek VM + Docker Compose:
+API + Keycloak + MSSQL + React statik dosyaları (+ Hangfire API içinde). SaaS
+olduğumuz için her şey zaten konteyner imajı — K8s'e geçiş kapısı açık kalır,
+hiçbir şey yeniden yazılmaz.</blockquote>
+<p>K8s'i yeniden değerlendirme sinyalleri (hangisi gelirse araştırma açılır):
+tek VM'in dikey sınırına dayanmak · SLA gereği çoklu-düğüm/sıfır-kesinti dağıtım ·
+tenant sayısının job+sorgu yükünü ayrı worker'lara bölmeyi gerektirmesi.</p>
+
+<h2><span class="no">11.</span>v1 kapsamı</h2>
+<div class="ici-disi">
+  <div class="ici">
+    <h3>İÇİ (ekranlar)</h3>
+    <ul>
+      <li>Login (Keycloak)</li>
+      <li>Tenant / kullanıcı / rol yönetimi</li>
+      <li>Bağlantılar (CRUD + Test Et)</li>
+      <li>Veri haritası tasarımı (tablo seçimi, dostça ad, ilişki, boyut/ölçü, mod)</li>
+      <li>Sürükle-bırak sorgu tasarımcısı + sonuç grid'i</li>
+      <li>Ham SQL ekranı (Monaco)</li>
+      <li>Rapor kaydetme / klasörleme / yetki</li>
+      <li>Grafikler</li>
+      <li>Dashboard tasarlayıcı + görüntüleyici</li>
+      <li>İçe alım job'ları (zamanlama + durum)</li>
+      <li>Audit ekranı</li>
+      <li>Excel/CSV export</li>
+    </ul>
+  </div>
+  <div class="disi">
+    <h3>DIŞI (bilinçli)</h3>
+    <ul>
+      <li>Çoklu motor (kapı açık — §5)</li>
+      <li>KDS Ajanı / gateway (§3)</li>
+      <li>Artımlı yükleme</li>
+      <li>Zamanlanmış rapor e-postası</li>
+      <li>Rapor embedding / dış API</li>
+      <li>Doğal dille sorgu (LLM)</li>
+      <li>PDF export</li>
+      <li>On-prem</li>
+      <li>Mobil uygulama</li>
+    </ul>
+  </div>
+</div>
+
+<h2><span class="no">12.</span>Başarı ölçütleri (v1)</h2>
+<ol>
+<li>SQL bilmeyen bir kullanıcı, iki tablolu join'li + gruplu + filtreli bir raporu
+<strong>hiç SQL yazmadan</strong> tasarlayıp grafiğe bağlayabilmeli ve dashboard'a
+koyabilmeli.</li>
+<li>Canlı modda 1M satırlık kaynak tabloda tasarımcı sorgusu ilk sayfayı &lt; 3 sn'de
+getirmeli; hiçbir sorgu satır sınırı/zaman aşımı olmadan koşamamalı.</li>
+<li>İçe alım job'ı zamanında koşup aynı raporu tenant deposundan aynı sonuçla vermeli;
+mod geçişi (canlı ↔ içe alım) raporu bozmamalı.</li>
+<li>SELECT dışı hiçbir komut, hiçbir ekrandan/yoldan çalıştırılamamalı —
+<strong>test kanıtlı</strong> (bekçi + read-only kullanıcı iki katman ayrı ayrı doğrulanır).</li>
+</ol>
+
+<h2><span class="no">13.</span>Riskler</h2>
+<table>
+<thead><tr><th style="width:26%">Risk</th><th style="width:22%">Etki</th><th>Önlem</th></tr></thead>
+<tbody>
+<tr><td>SaaS → müşteri DB erişimi (firewall)</td><td>Satış/kurulum engeli</td><td>v1 önkoşul belgesi (erişilebilir DB); Mod B'yi öne çıkar; ajan araştırması kuyrukta</td></tr>
+<tr><td>Sorgu tasarımcısı UX zorluğu</td><td>Ürünün kalbi; kötüyse ürün yok</td><td>S1'de ekran tasarımına ayrı efor; erken elle doğrulama; rakip inceleme (Metabase/Power BI)</td></tr>
+<tr><td>SQL üretici karmaşıklığı</td><td>Hatalı/yavaş SQL</td><td>v1 model kapsamı sınırlı (§5); altın-örnek (golden master) test seti; "SQL'i Göster" şeffaflığı</td></tr>
+<tr><td>Büyük sonuç kümeleri</td><td>Bellek/ağ çökmesi</td><td>Reader'da satır sınırı + server-side paging + sanallaştırılmış grid</td></tr>
+<tr><td>Lisans tuzakları</td><td>Ticari sürpriz</td><td>§9 tablosu bağlayıcı; her yeni paket lisans denetiminden geçer (SQLST kuralı)</td></tr>
+<tr><td>Tenant veri sızıntısı</td><td>En ağır güven kaybı</td><td><code>TenantId</code> global filter + tenant-başına depo DB + audit; S3'te test kanıtı</td></tr>
+</tbody>
+</table>
+
+</body>
+</html>

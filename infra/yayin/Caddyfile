@@ -1,0 +1,48 @@
+# S48 — KDS deneme yayini: tek yerel kapi (8085). TLS YOK — sifreleme Cloudflare tunelinin
+# ucunda; Caddy yalniz ayni makinede 127.0.0.1'e vekillik eder.
+#
+# BASIC-AUTH yalniz ON YUZ ve KIMLIK yollarinda: /api BILEREK disinda — API istekleri
+# Authorization: Bearer <token> tasir ve basic-auth ayni basligi istedigi icin ikisi
+# cakisir (tum API cagrilari 401 olurdu). API'nin kendi JWT kapisi zaten var; anonim
+# yuzeyi dar ve kendini koruyan uclardir (health, gomulu/ajan anahtar kapilari, kurulum=410).
+{
+	auto_https off
+	servers {
+		# Istekler hep yerel cloudflared'den gelir: onun X-Forwarded-Proto=https basligina
+		# guvenilsin (yoksa Caddy ezer, Keycloak kendini http sanir).
+		trusted_proxies static 127.0.0.1/8
+	}
+}
+
+:8085 {
+	# Tunel ucundan gelen X-Forwarded-* basliklarini aynen icerilere tasi.
+	handle /kimlik/* {
+		basic_auth {
+			{env.KDS_YAYIN_KULLANICI} {env.KDS_YAYIN_HASH}
+		}
+		reverse_proxy 127.0.0.1:8080 {
+			# lhr.life tuneli X-Forwarded-Proto gondermiyor; Keycloak kendini http sanip
+			# http'li endpoint uretiyordu (6 Eki 2026). Dis yuz DAIMA https - sabitle.
+			header_up X-Forwarded-Proto https
+		}
+	}
+
+	handle /api/* {
+		reverse_proxy 127.0.0.1:5210
+	}
+
+	# Saglik ucu API kokunde (/health) — tunel/izleme icin basic-auth'suz.
+	handle /health {
+		reverse_proxy 127.0.0.1:5210
+	}
+
+	handle {
+		basic_auth {
+			{env.KDS_YAYIN_KULLANICI} {env.KDS_YAYIN_HASH}
+		}
+		root * {env.KDS_YAYIN_DIST}
+		# SPA: dosya yoksa index.html (yonlendirmeyi React Router yapar).
+		try_files {path} /index.html
+		file_server
+	}
+}

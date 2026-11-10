@@ -1,0 +1,14 @@
+# Docker build bağlamını küçült — kaynak dışı her şeyi dışla.
+**/bin
+**/obj
+**/node_modules
+**/dist
+frontend/e2e-rapor
+frontend/test-results
+frontend/playwright-report
+infra/keycloak
+infra/mongosh
+.git
+.vs
+.vscode
+*.user

@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <!-- CQRS marker'lari (IKomut/ISorgu) Kds.Common'ta; MediatR.Contracts oradan transitif gelir.
+         K4: MediatR v13+ ticari lisans siniri Kds.Common'ta [12.5.0,13.0.0) ile korunur. -->
+    <ProjectReference Include="..\Kds.Common\Kds.Common.csproj" />
+  </ItemGroup>
+
+</Project>

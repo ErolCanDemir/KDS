@@ -1,0 +1,8 @@
+araclar/
+*.log
+.gizli-parola
+.pidler
+.ngrok-token
+.ngrok-domain
+GUNCEL-ADRES.txt
+.ssh-pid

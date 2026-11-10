@@ -1,0 +1,78 @@
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+/* S25 — açık/koyu YUMUŞAK DOLGU token'ları (21 Ağu mockup koyu paletinden).
+ * Sayfalardaki sabit açık hex'ler bu değişkenlere çevrildi: sx içinde bgcolor:'var(--kds-…)'
+ * tema yolundan geçmeden ham CSS değeri olarak uygulanır; modu TemaSaglayici
+ * <html data-mod="acik|koyu"> ile işaretler. Yeni yumuşak zemin gerekince buraya çift ekle. */
+:root {
+  --kds-zemin2: #f7f9fb;      /* panel içi hafif zemin (kod kutusu, kanvas boşluğu) */
+  --kds-dolgu: #eef2f6;       /* nötr dolgu: rozet, kapalı sekme, satır vurgusu */
+  --kds-tealdolgu: #e2f2f4;   /* marka-teal yumuşak dolgu */
+  --kds-mavidolgu: #f2f6ff;
+  --kds-mordolgu: #f4f0fb;
+  --kds-amberdolgu: #fff7ed;
+  --kds-kirmizidolgu: #fbeceb;
+  --kds-yesildolgu: #e5f5ee;
+  --kds-mor: #7b5cc4;
+  --kds-panel: #ffffff;          /* panel/diyalog zemini (theme.paper ile aynı) */
+  --kds-kaydirici: #c1cedb;      /* kaydırma çubuğu tutamacı */
+  --kds-kaydirici-h: #9db0c2;    /* hover */
+}
+:root[data-mod='koyu'] {
+  --kds-zemin2: #0e1b28;
+  --kds-dolgu: #1a2a3a;
+  --kds-tealdolgu: #0f3038;
+  --kds-mavidolgu: #16243d;
+  --kds-mordolgu: #241b38;
+  --kds-amberdolgu: #33270f;
+  --kds-kirmizidolgu: #331416;
+  --kds-yesildolgu: #10291d;
+  --kds-mor: #a78bfa;
+  --kds-panel: #12202e;
+  --kds-kaydirici: #2c4256;
+  --kds-kaydirici-h: #3d5871;
+}
+
+/* S26 — açılış animasyonları (grafik/KPI; login botlarıyla aynı dil: kısa, tek seferlik).
+ * sx içinde `animation: 'kds-... .6s ... both'` ile kullanılır. */
+@keyframes kds-bar-yuksel {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+@keyframes kds-belir {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; animation-delay: 0ms !important; }
+}
+
+/* S28c — kaydırma çubukları: tüm pencerelerde ince, tokenlı, köşesiz (kullanıcı bulgusu:
+ * diyaloglardaki kalın beyaz varsayılan çubuk koyu temayı bozuyordu). */
+* { scrollbar-width: thin; scrollbar-color: var(--kds-kaydirici) transparent; }
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-corner { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background: var(--kds-kaydirici);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+*::-webkit-scrollbar-thumb:hover { background-color: var(--kds-kaydirici-h); background-clip: padding-box; }
+
+/* MUI DialogContent varsayılanı overflow-y:auto + ŞEFFAF zemindir — GPU bileşik katmanı
+ * koyu temada beyaz basabiliyor (Tablo Ekle bulgusu). Tüm diyalog içeriklerine opak zemin. */
+.MuiDialogContent-root { background-color: var(--kds-panel); }
+
+/* S31 — Soru Sor sohbeti: sürmekte olan adımın dönen ikonu + Kadi rozetinin nabzı. */
+@keyframes kds-donen { to { transform: rotate(360deg); } }
+@keyframes kds-kadi-nabiz { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+@media (prefers-reduced-motion: reduce) {
+  [class*='kds-donen'], [style*='kds-donen'], [style*='kds-kadi-nabiz'] { animation: none !important; }
+}
